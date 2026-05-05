@@ -1,111 +1,133 @@
 # spec-first
 
-> **Spec-Driven Development with AI** — a reusable methodology for writing a complete,
-> buildable product specification before writing a single line of code.
-
-The spec is the building. Everything else is just typing.
+> **Stop building the wrong thing.**
+> spec-first is a Socratic AI methodology that produces a complete, developer-ready product specification — before you write a single line of code.
 
 ---
 
-## Install
+Most builders open their IDE the moment they have an idea. Weeks later, they realize they've been solving the wrong problem for the wrong user, with a data model that can't support the features they actually need.
 
-Works with Claude Code CLI, Claude Cowork, Cursor, Windsurf, GitHub Copilot, Codex CLI, Antigravity, ChatGPT, Gemini, and any LLM tool with a system prompt field.
+**spec-first fixes this at the root.**
 
-**One-liner — auto-detects your tools:**
+It turns your AI assistant into a relentless Socratic design partner — one question at a time, no hand-waving, no "we'll figure it out later." By the end of a session, you have five documents so precise that a developer who wasn't in the room could build exactly what you have in your head, without asking you a single question.
+
+> *The spec is the building. Everything else is just typing.*
+
+---
+
+## What You Get
+
+A complete Software Design Document in five files — produced through conversation, before any code:
+
+| File | What's Inside |
+|---|---|
+| `SPEC.md` | Product vision, target users, features, business model, tech stack, NFRs with real numbers |
+| `DATAMODEL.md` | Every table, column, type, constraint, index, and RLS policy — ready to run |
+| `API.md` | Every endpoint with method, path, auth, full request/response shapes, and error codes |
+| `SCREENS.md` | Every UI screen with layout, all elements, interactions, and edge case behavior |
+| `AGENTS.md` | Every AI agent with typed inputs/outputs, full system prompt, model config, failure handling |
+
+The session is done when **a stranger could build exactly what you have in your head — without asking you anything.**
+
+---
+
+## Why It Works
+
+Most design sessions fail because the AI is too agreeable. It takes your vague answer and moves on. spec-first doesn't.
+
+It asks one question at a time and **pushes back** when:
+
+- Your audience is too broad (*"any industry, any level"* → "Who are you actually building for first?")
+- Your scope creeps into V2 (*"we'll also need..."* → "Is this V1 or are we building the whole platform?")
+- Your numbers have no basis (*"we'll handle a million users"* → "How did you arrive at that number?")
+- You use lazy words (*"simple"*, *"just"* → "Simple for whom? Unpack it.")
+
+Every decision gets locked with a ✅ before moving on. Nothing progresses while open debates 🔄 or unknowns ❓ exist. By the time documents are generated, there is nothing left to guess.
+
+---
+
+## Works With Every Tool You Already Use
+
+Install once. Use everywhere.
 
 ```bash
 curl -sL https://raw.githubusercontent.com/yeluru/spec-first/main/install.sh | bash
 ```
 
-**Or install manually for your tool:**
+Auto-detects and installs for every tool found on your machine. Or install manually:
 
-| Tool | Command |
+| Tool | How |
 |---|---|
-| Claude Code CLI / Cowork | `git clone https://github.com/yeluru/spec-first ~/.claude/skills/spec-first` |
-| Cursor (global) | `curl -sL .../formats/cursorrules > ~/.cursor/rules/spec-first.mdc` |
-| Cursor (per-project) | `curl -sL .../formats/cursorrules > .cursorrules` |
-| Windsurf | `curl -sL .../formats/cursorrules > ~/.windsurf/rules/spec-first.md` |
-| GitHub Copilot | `curl -sL .../formats/cursorrules > .github/copilot-instructions.md` |
-| Codex CLI | `curl -sL .../formats/system-prompt.md >> ~/.codex/instructions.md` |
-| ChatGPT / Gemini / other | Paste [`formats/system-prompt.md`](./formats/system-prompt.md) into custom instructions |
+| **Claude Code CLI / Cowork** | `git clone https://github.com/yeluru/spec-first ~/.claude/skills/spec-first` → use `/spec-first` |
+| **Cursor** (global) | `curl -sL https://raw.githubusercontent.com/yeluru/spec-first/main/formats/cursorrules > ~/.cursor/rules/spec-first.mdc` |
+| **Cursor** (per-project) | `curl -sL https://raw.githubusercontent.com/yeluru/spec-first/main/formats/cursorrules > .cursorrules` |
+| **Windsurf** | `curl -sL https://raw.githubusercontent.com/yeluru/spec-first/main/formats/cursorrules > ~/.windsurf/rules/spec-first.md` |
+| **GitHub Copilot** | `curl -sL https://raw.githubusercontent.com/yeluru/spec-first/main/formats/cursorrules > .github/copilot-instructions.md` |
+| **Codex CLI** | `curl -sL https://raw.githubusercontent.com/yeluru/spec-first/main/formats/system-prompt.md >> ~/.codex/instructions.md` |
+| **ChatGPT / Gemini / any LLM** | Paste [`formats/system-prompt.md`](./formats/system-prompt.md) into custom instructions |
 
-Once installed, just tell your AI: *"I want to build X"* — the skill takes over from there.
-
----
-
-## What's in This Repo
-
-```
-spec-first/
-├── README.md                        ← you are here
-├── SKILL.md                         ← Claude Code CLI / Cowork skill definition
-├── install.sh                       ← auto-detect installer for all tools
-├── formats/
-│   ├── system-prompt.md             ← universal prompt for ChatGPT, Gemini, Codex, etc.
-│   └── cursorrules                  ← Cursor / Windsurf / Copilot rules format
-├── prompts/
-│   ├── 01_starter.md               ← the one prompt to start your SDD session
-│   └── 02_session_tips.md          ← prompts to use during the session
-└── templates/
-    ├── SPEC_template.md             ← product spec template
-    ├── DATAMODEL_template.md        ← database schema template
-    ├── API_template.md              ← API contract template
-    ├── SCREENS_template.md          ← UI screen spec template
-    └── AGENTS_template.md           ← AI agent design template (if applicable)
-```
+Once installed, just say *"I want to build X"* — spec-first takes over from there.
 
 ---
 
-## How to Use This
+## How a Session Works
 
-### Step 1 — Start the session
+### Phase 1 — Discovery
 
-Open any AI assistant (Claude, Gemini, ChatGPT, Copilot Chat).
-Copy the prompt from [`prompts/01_starter.md`](./prompts/01_starter.md) and paste it.
+Your AI works through 11 design domains in order, one question at a time. No domain is closed until every decision in it is locked with ✅.
 
-The AI will ask: **"What's on your mind to build?"**
-
-Answer in one paragraph. The Socratic process begins from there — one question at a time.
-
-### Step 2 — Let the AI guide you through the spec
-
-The AI will work through these sections in order:
-
-1. **Vision** — what is this, what does it do differently?
-2. **User** — who specifically, and who is it NOT for?
-3. **Success metric** — one sentence: after using this, the user can ___
+1. **Vision** — what is this, in one sentence to a smart friend?
+2. **Audience** — who specifically? Who is it NOT for?
+3. **Core flow** — step by step, what does the user actually do?
 4. **Features & scope** — what's in v1, what's explicitly out?
-5. **Business model** — pricing, cost basis, payment infrastructure
-6. **Tech stack** — what gets built on what?
-7. **Architecture** — how does the system work end to end?
-8. **NFRs** — performance, uptime, security, rate limits
+5. **AI rules** — if AI is involved, what can it touch vs. never touch?
+6. **Business model** — pricing, tiers, cost basis, payment infrastructure
+7. **Tech stack** — what gets built on what? No vague answers.
+8. **Auth** — how do users log in?
+9. **Storage** — where do files, data, and generated content live?
+10. **NFRs** — real numbers for latency, uptime, scale, security, privacy
+11. **Roadmap** — V2/V3 documented and locked out of scope
 
-Every decision gets locked with ✅ before moving on.
+### Phase 2 — Final check
 
-### Step 3 — Generate the technical documents
+Before writing anything, the AI lists every locked decision, surfaces remaining unknowns, and asks: *"Is there anything a developer would need to know that we haven't discussed?"*
 
-Once the product spec is locked, prompt the AI to generate each document
-using the templates in [`/templates`](./templates/) as structure guides.
+### Phase 3 — Document generation
 
-Do one document per session:
+One file at a time: SPEC.md → DATAMODEL.md → API.md → SCREENS.md → AGENTS.md. Each file follows a strict template. No hand-waving, no placeholders.
+
+After the last file: *"Could a developer who was not in this conversation build exactly what you have in your head — without asking you anything? Tell me honestly what's missing."*
+
+---
+
+## Prompts That Keep the Session Honest
+
+Use these when the conversation needs a nudge:
+
 ```
-Using our locked decisions, generate DATAMODEL.md following the structure 
-in the DATAMODEL_template.md format. Start with the entity relationship 
-overview before writing any tables.
+What's wrong with what I just said? Push back hard.
+```
+```
+Don't give me options. Tell me what you'd recommend and why.
+```
+```
+Do a full pass — what's still ❓ or 🔄?
+```
+```
+Is this a V1 feature or am I describing V2?
+```
+```
+Could a developer who was not in this conversation build from this spec without asking me anything?
 ```
 
-### Step 4 — Verify the spec is ready to build from
+More in [`prompts/02_session_tips.md`](./prompts/02_session_tips.md).
 
-Use this prompt to check before you start coding:
-```
-Could a developer who was not in this conversation pick up this spec 
-and build exactly what I have in my head — without asking me anything?
-Tell me honestly what's missing.
-```
+---
 
-### Step 5 — Hand the SDD to a coding tool
+## Handing the SDD to a Coding Tool
 
-Reference the spec files explicitly in your build prompts:
+Once your spec is locked, reference it explicitly in every build prompt:
+
 ```
 Using SPEC.md, DATAMODEL.md, and API.md as your reference, scaffold the 
 FastAPI backend with SQLAlchemy models and the auth routes.
@@ -114,54 +136,48 @@ Before writing any code, show me the full folder tree you plan to create
 and wait for my approval.
 ```
 
----
-
-## What a Complete SDD Looks Like
-
-| File | What It Contains |
-|---|---|
-| `SPEC.md` | Product decisions, user persona, features, business model, tech stack, NFRs |
-| `DATAMODEL.md` | Every database table, column, constraint, index, and business rule |
-| `API.md` | Every API endpoint with method, path, request/response shapes, error codes |
-| `SCREENS.md` | Every UI screen with layout, elements, behavior, and flow |
-| `AGENTS.md` | Every AI agent with inputs, outputs, prompt strategy, and failure modes |
-
-The spec is done when **a developer who was not in the room for any design decisions
-could build exactly what you have in your head — without asking you anything.**
+The spec becomes your source of truth. The AI stops inventing and starts building.
 
 ---
 
-## The Methodology in One Page
+## What's in This Repo
 
-> Read the full experience write-up: [How I wrote my product spec with AI before writing a single line of code](./EXPERIENCE.md)
+```
+spec-first/
+├── SKILL.md                         ← Claude Code CLI / Cowork skill definition
+├── install.sh                       ← auto-detect installer for all tools
+├── formats/
+│   ├── system-prompt.md             ← universal prompt for ChatGPT, Gemini, Codex, etc.
+│   └── cursorrules                  ← Cursor / Windsurf / Copilot rules
+├── prompts/
+│   ├── 01_starter.md               ← the one prompt to start a session manually
+│   └── 02_session_tips.md          ← prompts to keep the session honest
+└── templates/
+    ├── SPEC_template.md
+    ├── DATAMODEL_template.md
+    ├── API_template.md
+    ├── SCREENS_template.md
+    └── AGENTS_template.md
+```
 
-**The questions that matter most:**
-- Who specifically is this for — and who is it NOT for?
-- What does "done" look like for your user in one sentence?
-- What are we explicitly NOT building in version one?
-- What's the basis for that number?
+---
 
-**The prompts that keep the session honest:**
-- *"What's wrong with what I just said? Push back."*
-- *"Don't give me options. Tell me what you'd recommend and why."*
-- *"Did you calculate that number or estimate it? Show your work."*
-- *"Do a full pass and tell me what's still ❓ or 🔄."*
+## The Full Story
 
-**The signals that the spec is ready:**
-- Every decision is locked with ✅
-- No section has ❓ or 🔄 remaining
-- The out-of-scope list exists and is specific
-- A stranger could build from it
+> [How I wrote my product spec with AI before writing a single line of code](./EXPERIENCE.md)
+
+A first-person account of running a real SDD session — the questions that unlocked everything, where the AI pushed back and why it mattered, and what the finished spec looked like.
 
 ---
 
 ## Contributing
 
-Used this methodology? Improved the prompts? PRs welcome.
+Used spec-first on a real project? Improved the prompts? Found a better way to handle a specific domain?
 
-If you produced a SDD using this approach and want to share a sanitized version
-as an example (with product details removed), open a PR to add it to `/examples`.
+PRs are welcome. If you want to add tool support, add both a format file in `formats/` and install instructions in the README.
+
+If you produced a spec using this methodology and want to share a sanitized version (product details removed), open a PR to add it to `/examples` — real-world specs are the best documentation.
 
 ---
 
-*Built from a real SDD session. No product details included — just the methodology.*
+*Built spec-first. No product details included — just the methodology.*
