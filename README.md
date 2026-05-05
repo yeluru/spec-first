@@ -59,11 +59,11 @@ Auto-detects and installs for every tool found on your machine. Or install manua
 | Tool | How |
 |---|---|
 | **Claude Code CLI / Cowork** | `git clone https://github.com/yeluru/spec-first ~/.claude/skills/spec-first` → use `/spec-first` |
+| **Codex** (native Mac app) | `git clone https://github.com/yeluru/spec-first ~/.codex/skills/spec-first` → restart Codex → use `/spec-first` |
 | **Cursor** (global) | `curl -sL https://raw.githubusercontent.com/yeluru/spec-first/main/formats/cursorrules > ~/.cursor/rules/spec-first.mdc` |
 | **Cursor** (per-project) | `curl -sL https://raw.githubusercontent.com/yeluru/spec-first/main/formats/cursorrules > .cursorrules` |
 | **Windsurf** | `curl -sL https://raw.githubusercontent.com/yeluru/spec-first/main/formats/cursorrules > ~/.windsurf/rules/spec-first.md` |
 | **GitHub Copilot** | `curl -sL https://raw.githubusercontent.com/yeluru/spec-first/main/formats/cursorrules > .github/copilot-instructions.md` |
-| **Codex CLI** | `curl -sL https://raw.githubusercontent.com/yeluru/spec-first/main/formats/system-prompt.md >> ~/.codex/instructions.md` |
 | **ChatGPT / Gemini / any LLM** | Paste [`formats/system-prompt.md`](./formats/system-prompt.md) into custom instructions |
 
 Once installed, just say *"I want to build X"* — spec-first takes over from there.

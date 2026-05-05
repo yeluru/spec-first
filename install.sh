@@ -98,24 +98,25 @@ fi
 
 echo ""
 
-# ─── 5. Codex CLI ────────────────────────────────────────────────────────────
+# ─── 5. Codex (native Mac app) ───────────────────────────────────────────────
+CODEX_SKILL_DIR="$HOME/.codex/skills/spec-first"
 if command -v codex &>/dev/null || [ -d "$HOME/.codex" ]; then
-  echo -e "${CYAN}▸ Codex CLI detected${RESET}"
-  mkdir -p "$HOME/.codex"
+  echo -e "${CYAN}▸ Codex detected${RESET}"
+  mkdir -p "$HOME/.codex/skills"
   clone_repo
-  CODEX_INSTRUCTIONS="$HOME/.codex/instructions.md"
-  if [ -f "$CODEX_INSTRUCTIONS" ]; then
-    echo "" >> "$CODEX_INSTRUCTIONS"
-    echo "---" >> "$CODEX_INSTRUCTIONS"
-    cat "$TMPDIR_CLONE/spec-first/formats/system-prompt.md" >> "$CODEX_INSTRUCTIONS"
-    echo -e "  ${GREEN}✓ Appended to $CODEX_INSTRUCTIONS${RESET}"
+
+  if [ -d "$CODEX_SKILL_DIR" ]; then
+    echo -e "  ${YELLOW}Already installed — pulling latest...${RESET}"
+    git -C "$CODEX_SKILL_DIR" pull --quiet
   else
-    cp "$TMPDIR_CLONE/spec-first/formats/system-prompt.md" "$CODEX_INSTRUCTIONS"
-    echo -e "  ${GREEN}✓ Created $CODEX_INSTRUCTIONS${RESET}"
+    cp -r "$TMPDIR_CLONE/spec-first" "$CODEX_SKILL_DIR"
   fi
-  installed+=("Codex CLI")
+
+  echo -e "  ${GREEN}✓ Installed at $CODEX_SKILL_DIR${RESET}"
+  echo    "    Restart Codex, then use /spec-first to invoke the skill."
+  installed+=("Codex")
 else
-  skipped+=("Codex CLI (~/.codex not found)")
+  skipped+=("Codex (~/.codex not found)")
 fi
 
 echo ""
