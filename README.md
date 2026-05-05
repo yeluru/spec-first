@@ -7,11 +7,42 @@ The spec is the building. Everything else is just typing.
 
 ---
 
+## Install
+
+Works with Claude Code CLI, Claude Cowork, Cursor, Windsurf, GitHub Copilot, Codex CLI, Antigravity, ChatGPT, Gemini, and any LLM tool with a system prompt field.
+
+**One-liner — auto-detects your tools:**
+
+```bash
+curl -sL https://raw.githubusercontent.com/yeluru/sdd-with-ai/main/install.sh | bash
+```
+
+**Or install manually for your tool:**
+
+| Tool | Command |
+|---|---|
+| Claude Code CLI / Cowork | `git clone https://github.com/yeluru/sdd-with-ai ~/.claude/skills/sdd-with-ai` |
+| Cursor (global) | `curl -sL .../formats/cursorrules > ~/.cursor/rules/sdd-with-ai.mdc` |
+| Cursor (per-project) | `curl -sL .../formats/cursorrules > .cursorrules` |
+| Windsurf | `curl -sL .../formats/cursorrules > ~/.windsurf/rules/sdd-with-ai.md` |
+| GitHub Copilot | `curl -sL .../formats/cursorrules > .github/copilot-instructions.md` |
+| Codex CLI | `curl -sL .../formats/system-prompt.md >> ~/.codex/instructions.md` |
+| ChatGPT / Gemini / other | Paste [`formats/system-prompt.md`](./formats/system-prompt.md) into custom instructions |
+
+Once installed, just tell your AI: *"I want to build X"* — the skill takes over from there.
+
+---
+
 ## What's in This Repo
 
 ```
 sdd-with-ai/
 ├── README.md                        ← you are here
+├── SKILL.md                         ← Claude Code CLI / Cowork skill definition
+├── install.sh                       ← auto-detect installer for all tools
+├── formats/
+│   ├── system-prompt.md             ← universal prompt for ChatGPT, Gemini, Codex, etc.
+│   └── cursorrules                  ← Cursor / Windsurf / Copilot rules format
 ├── prompts/
 │   ├── 01_starter.md               ← the one prompt to start your SDD session
 │   └── 02_session_tips.md          ← prompts to use during the session
