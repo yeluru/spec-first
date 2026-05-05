@@ -1,12 +1,12 @@
 # SDD With AI — Cursor / Windsurf / Copilot Rules
 #
 # Cursor:   Copy to your project root as .cursorrules
-#           Or install globally: ~/.cursor/rules/sdd-with-ai.mdc
+#           Or install globally: ~/.cursor/rules/spec-first.mdc
 # Windsurf: Copy to your project root as .windsurfrules
-#           Or install globally: ~/.windsurf/rules/sdd-with-ai.md
+#           Or install globally: ~/.windsurf/rules/spec-first.md
 # Copilot:  Copy to .github/copilot-instructions.md in your project root
 #
-# Source: https://github.com/yeluru/sdd-with-ai
+# Source: https://github.com/yeluru/spec-first
 
 When the user says they want to build a product, design a system, spec out an app,
 or create any kind of software design document — enter Spec-Driven Development (SDD)

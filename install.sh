@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-# install.sh — sdd-with-ai installer
+# install.sh — spec-first installer
 # Detects your installed tools and installs the skill/prompt to the right place.
 #
 # Usage:
 #   bash install.sh
-#   curl -sL https://raw.githubusercontent.com/yeluru/sdd-with-ai/main/install.sh | bash
+#   curl -sL https://raw.githubusercontent.com/yeluru/spec-first/main/install.sh | bash
 
 set -e
 
-REPO="https://github.com/yeluru/sdd-with-ai"
-SKILL_DIR="$HOME/.claude/skills/sdd-with-ai"
+REPO="https://github.com/yeluru/spec-first"
+SKILL_DIR="$HOME/.claude/skills/spec-first"
 TMPDIR_CLONE=$(mktemp -d)
 
 GREEN='\033[0;32m'
@@ -19,7 +19,7 @@ BOLD='\033[1m'
 RESET='\033[0m'
 
 echo ""
-echo -e "${BOLD}sdd-with-ai installer${RESET}"
+echo -e "${BOLD}spec-first installer${RESET}"
 echo -e "Spec-Driven Development with AI — ${CYAN}${REPO}${RESET}"
 echo ""
 
@@ -27,9 +27,9 @@ installed=()
 skipped=()
 
 clone_repo() {
-  if [ ! -d "$TMPDIR_CLONE/sdd-with-ai" ]; then
+  if [ ! -d "$TMPDIR_CLONE/spec-first" ]; then
     echo "  Fetching repo..."
-    git clone --quiet "$REPO" "$TMPDIR_CLONE/sdd-with-ai"
+    git clone --quiet "$REPO" "$TMPDIR_CLONE/spec-first"
   fi
 }
 
@@ -42,11 +42,11 @@ if command -v claude &>/dev/null || [ -d "$HOME/.claude" ]; then
     git -C "$SKILL_DIR" pull --quiet
   else
     clone_repo
-    cp -r "$TMPDIR_CLONE/sdd-with-ai" "$SKILL_DIR"
+    cp -r "$TMPDIR_CLONE/spec-first" "$SKILL_DIR"
   fi
 
   echo -e "  ${GREEN}✓ Installed at $SKILL_DIR${RESET}"
-  echo    "    Use /sdd-with-ai in Claude Code CLI or Claude Cowork."
+  echo    "    Use /spec-first in Claude Code CLI or Claude Cowork."
   installed+=("Claude Code CLI / Claude Cowork")
 else
   skipped+=("Claude Code CLI / Cowork (claude not found, ~/.claude not present)")
@@ -59,9 +59,9 @@ if [ -d "$HOME/.cursor" ] || command -v cursor &>/dev/null; then
   echo -e "${CYAN}▸ Cursor detected${RESET}"
   mkdir -p "$HOME/.cursor/rules"
   clone_repo
-  cp "$TMPDIR_CLONE/sdd-with-ai/formats/cursorrules" "$HOME/.cursor/rules/sdd-with-ai.mdc"
-  echo -e "  ${GREEN}✓ Installed global rule at ~/.cursor/rules/sdd-with-ai.mdc${RESET}"
-  echo    "    Per-project: cp ~/.cursor/rules/sdd-with-ai.mdc ./.cursorrules"
+  cp "$TMPDIR_CLONE/spec-first/formats/cursorrules" "$HOME/.cursor/rules/spec-first.mdc"
+  echo -e "  ${GREEN}✓ Installed global rule at ~/.cursor/rules/spec-first.mdc${RESET}"
+  echo    "    Per-project: cp ~/.cursor/rules/spec-first.mdc ./.cursorrules"
   installed+=("Cursor")
 else
   skipped+=("Cursor (~/.cursor not found)")
@@ -74,8 +74,8 @@ if [ -d "$HOME/.windsurf" ] || command -v windsurf &>/dev/null; then
   echo -e "${CYAN}▸ Windsurf detected${RESET}"
   mkdir -p "$HOME/.windsurf/rules"
   clone_repo
-  cp "$TMPDIR_CLONE/sdd-with-ai/formats/cursorrules" "$HOME/.windsurf/rules/sdd-with-ai.md"
-  echo -e "  ${GREEN}✓ Installed global rule at ~/.windsurf/rules/sdd-with-ai.md${RESET}"
+  cp "$TMPDIR_CLONE/spec-first/formats/cursorrules" "$HOME/.windsurf/rules/spec-first.md"
+  echo -e "  ${GREEN}✓ Installed global rule at ~/.windsurf/rules/spec-first.md${RESET}"
   installed+=("Windsurf")
 else
   skipped+=("Windsurf (~/.windsurf not found)")
@@ -88,7 +88,7 @@ if [ -d ".git" ]; then
   echo -e "${CYAN}▸ Git repo detected — installing GitHub Copilot instructions${RESET}"
   mkdir -p ".github"
   clone_repo
-  cp "$TMPDIR_CLONE/sdd-with-ai/formats/cursorrules" ".github/copilot-instructions.md"
+  cp "$TMPDIR_CLONE/spec-first/formats/cursorrules" ".github/copilot-instructions.md"
   echo -e "  ${GREEN}✓ Created .github/copilot-instructions.md${RESET}"
   echo    "    Commit this file to share the SDD workflow with your team."
   installed+=("GitHub Copilot (project)")
@@ -107,10 +107,10 @@ if command -v codex &>/dev/null || [ -d "$HOME/.codex" ]; then
   if [ -f "$CODEX_INSTRUCTIONS" ]; then
     echo "" >> "$CODEX_INSTRUCTIONS"
     echo "---" >> "$CODEX_INSTRUCTIONS"
-    cat "$TMPDIR_CLONE/sdd-with-ai/formats/system-prompt.md" >> "$CODEX_INSTRUCTIONS"
+    cat "$TMPDIR_CLONE/spec-first/formats/system-prompt.md" >> "$CODEX_INSTRUCTIONS"
     echo -e "  ${GREEN}✓ Appended to $CODEX_INSTRUCTIONS${RESET}"
   else
-    cp "$TMPDIR_CLONE/sdd-with-ai/formats/system-prompt.md" "$CODEX_INSTRUCTIONS"
+    cp "$TMPDIR_CLONE/spec-first/formats/system-prompt.md" "$CODEX_INSTRUCTIONS"
     echo -e "  ${GREEN}✓ Created $CODEX_INSTRUCTIONS${RESET}"
   fi
   installed+=("Codex CLI")
@@ -125,8 +125,8 @@ if command -v antigravity &>/dev/null || [ -d "$HOME/.antigravity" ]; then
   echo -e "${CYAN}▸ Antigravity detected${RESET}"
   mkdir -p "$HOME/.antigravity/skills"
   clone_repo
-  cp -r "$TMPDIR_CLONE/sdd-with-ai" "$HOME/.antigravity/skills/sdd-with-ai"
-  echo -e "  ${GREEN}✓ Installed at ~/.antigravity/skills/sdd-with-ai${RESET}"
+  cp -r "$TMPDIR_CLONE/spec-first" "$HOME/.antigravity/skills/spec-first"
+  echo -e "  ${GREEN}✓ Installed at ~/.antigravity/skills/spec-first${RESET}"
   installed+=("Antigravity")
 else
   skipped+=("Antigravity (~/.antigravity not found)")

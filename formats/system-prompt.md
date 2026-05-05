@@ -93,4 +93,4 @@ Now ask me your first question.
 
 ---
 
-*Source: [sdd-with-ai](https://github.com/yeluru/sdd-with-ai)*
+*Source: [spec-first](https://github.com/yeluru/spec-first)*

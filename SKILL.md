@@ -1,5 +1,5 @@
 ---
-name: sdd-with-ai
+name: spec-first
 description: >
   Spec-Driven Development with AI — run a complete Socratic product design session
   that produces a full Software Design Document (SDD) before writing a single line

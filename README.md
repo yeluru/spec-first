@@ -1,4 +1,4 @@
-# sdd-with-ai
+# spec-first
 
 > **Spec-Driven Development with AI** — a reusable methodology for writing a complete,
 > buildable product specification before writing a single line of code.
@@ -14,17 +14,17 @@ Works with Claude Code CLI, Claude Cowork, Cursor, Windsurf, GitHub Copilot, Cod
 **One-liner — auto-detects your tools:**
 
 ```bash
-curl -sL https://raw.githubusercontent.com/yeluru/sdd-with-ai/main/install.sh | bash
+curl -sL https://raw.githubusercontent.com/yeluru/spec-first/main/install.sh | bash
 ```
 
 **Or install manually for your tool:**
 
 | Tool | Command |
 |---|---|
-| Claude Code CLI / Cowork | `git clone https://github.com/yeluru/sdd-with-ai ~/.claude/skills/sdd-with-ai` |
-| Cursor (global) | `curl -sL .../formats/cursorrules > ~/.cursor/rules/sdd-with-ai.mdc` |
+| Claude Code CLI / Cowork | `git clone https://github.com/yeluru/spec-first ~/.claude/skills/spec-first` |
+| Cursor (global) | `curl -sL .../formats/cursorrules > ~/.cursor/rules/spec-first.mdc` |
 | Cursor (per-project) | `curl -sL .../formats/cursorrules > .cursorrules` |
-| Windsurf | `curl -sL .../formats/cursorrules > ~/.windsurf/rules/sdd-with-ai.md` |
+| Windsurf | `curl -sL .../formats/cursorrules > ~/.windsurf/rules/spec-first.md` |
 | GitHub Copilot | `curl -sL .../formats/cursorrules > .github/copilot-instructions.md` |
 | Codex CLI | `curl -sL .../formats/system-prompt.md >> ~/.codex/instructions.md` |
 | ChatGPT / Gemini / other | Paste [`formats/system-prompt.md`](./formats/system-prompt.md) into custom instructions |
@@ -36,7 +36,7 @@ Once installed, just tell your AI: *"I want to build X"* — the skill takes ove
 ## What's in This Repo
 
 ```
-sdd-with-ai/
+spec-first/
 ├── README.md                        ← you are here
 ├── SKILL.md                         ← Claude Code CLI / Cowork skill definition
 ├── install.sh                       ← auto-detect installer for all tools
