@@ -1,285 +1,148 @@
-# Spec-Driven Development with AI — A Practical Guide
+# Spec-Driven Development with AI — Three Real Sessions
 
-> **How to write a complete, buildable product spec before writing a single line of code — using an AI as your Socratic design partner.**
-
----
-
-## Table of Contents
-
-- [Why SDD?](#why-sdd)
-- [What is an SDD?](#what-is-an-sdd)
-- [The Experience: What Actually Happened](#the-experience-what-actually-happened)
-  - [Questions That Unlocked Everything](#the-questions-that-unlocked-everything)
-  - [Where I Pushed Back on the AI](#where-i-pushed-back-on-the-ai--and-why-it-mattered)
-  - [When the Spec Was Ready](#the-moment-i-knew-the-spec-was-ready)
-- [The Starter Prompt](#the-starter-prompt)
-- [Session Tips](#session-tips)
-- [Output Structure](#output-structure)
-- [Key Principles](#key-principles)
+> **What actually happened when I refused to open my IDE until the spec was done.**
 
 ---
 
-## Why SDD?
+## Why I Built This
 
-Most builders have the same problem. They have an idea, they're excited, and they open their IDE before they've answered the most basic questions about what they're building and for whom.
+I've been building products for twenty years. I know better than to start coding before designing. And I still do it. The excitement of a new idea, the pull of the IDE — it happens every time.
 
-The result: you build for weeks, then realize you've been solving the wrong problem for the wrong user. Or you build three features that contradict each other because you never resolved a design conflict upfront.
+What changed for me was realizing that AI coding tools made this problem *worse*, not better. With Claude or Cursor in the room, you can go from idea to running code in thirty minutes. Which means you can build the wrong thing at unprecedented speed.
 
-Spec-Driven Development (SDD) fixes this by forcing you to produce a complete, internally consistent specification *before* a single line of code is written. The spec is specific enough that a developer — or an AI coding tool — could pick it up and build without inventing design decisions.
-
-> **The spec is the building. Everything else is just typing.**
+I started forcing myself to run spec sessions before touching code. What came out of those sessions — the pushback, the decisions locked in before a single file was created — is what this methodology is about. Here are three real examples.
 
 ---
 
-## What is an SDD?
+## Session 1: HireVault — The Tool That Had to Stay Offline
 
-A complete SDD is five documents:
+**What I thought I was building:** An automated resume extraction tool for recruiters. Emails come in, the agent pulls the resume, parses the candidate, adds them to a pipeline. Straightforward.
 
-| Document | Traditional Name | What It Answers |
-|---|---|---|
-| `SPEC.md` | Product Requirements Document (PRD) | *What* to build and *why* |
-| `DATAMODEL.md` | Data Design Specification | *How* data is structured |
-| `API.md` | API Specification | *How* systems communicate |
-| `SCREENS.md` | UI/UX Specification | *How* users interact |
-| `AGENTS.md` | Agent Design Specification | *How* the AI pipeline works (if applicable) |
+**The first thing that got challenged:** My stack assumption.
 
-`SPEC.md` alone is the PRD — product decisions, user persona, business model, tech choices. It answers "what are we building and why."
+I described the product and jumped to implementation questions. The AI asked before we got there:
 
-The full SDD is all five files together. A coding agent handed only `SPEC.md` would know *what* to build but not *how* — it would have to guess at schema, endpoints, and screen layouts. All five files together eliminate that guesswork.
+> *"Before we talk about stack — who is using this, and where does the data live? Because those two answers will determine whether Supabase is the right call or completely the wrong one."*
 
----
+I said recruiters would use it. I said it should probably just use Supabase like everything else I build.
 
-## The Experience: What Actually Happened
+> *"Stop. Your recruiter's inbox contains candidate names, contact details, employment histories, and in some cases immigration status. You just told me the product's core value is that it reads email automatically. If Supabase is in the stack, you've made a promise you might not be able to keep — that this data is private. Is privacy the value proposition, or is it not?"*
 
-I sat down with an AI assistant and didn't let it write a single line of code until we had a complete SDD. The session took a few hours. Here's what made it work.
+It was. I just hadn't said it out loud.
 
-### The Questions That Unlocked Everything
+That one question locked in the entire architecture. SQLite. Local file system. No cloud dependencies. No server process. The tool runs on the recruiter's machine and the data never leaves it.
 
-#### "Who, specifically, is this for?"
+Then I asked: *"But can this ever become a SaaS product?"*
 
-I described my product idea. The AI's first response wasn't "great, let's design it." It was:
+> *"Yes, and the spec is already designed for it if we're careful now. Every table gets a* `user_id` *column — NULL in local mode, populated in SaaS mode. When you're ready to migrate, you're populating an existing column, not restructuring every table. That's a ten-second decision now versus a painful migration later."*
 
-> *"Before we go further — who specifically is this for? I can think of at least three very different user types who might want this. They have different needs, different willingness to pay, and different success metrics. Which one are you building for in version one?"*
+We locked the local-first constraint, documented the SaaS upgrade path, and moved on. I didn't have to revisit the architecture question once during the build.
 
-It laid out the user types. I picked one. The AI immediately said:
-
-> *"Good. Now: are you sure? Because if you're building for this user, then features X and Y that you mentioned earlier actually don't serve them. Do you want to remove those from scope or reconsider who you're building for?"*
-
-That single question — *are you sure?* — probably saved me three months of building the wrong thing.
-
-> **Takeaway:** Don't just describe your user. Let the AI challenge whether your feature list is consistent with the user you described.
+**What the spec session prevented:** I would have started with Supabase. I would have gotten halfway through before someone asked me where the data was going. I would have had to rebuild the storage layer.
 
 ---
 
-#### "What does 'done' look like for your user?"
+## Session 2: JDX — The Product That Almost Had the Wrong Name
 
-Not "what features does the product have." What does success look like for the person using it?
+**What I thought I was building:** A tool that matches resumes to job descriptions and tells you how well you fit.
 
-I gave a vague answer. The AI pushed:
+**The name I almost shipped with:** Resume Matcher.
 
-> *"That's too broad. You've described three different success states there. Let me be specific: after using this product, what should your user be able to do that they couldn't before? Give me one sentence."*
+We were at the end of the spec session. Five documents nearly done. I said the product didn't have a name yet and suggested Resume Matcher as a placeholder.
 
-That one-sentence success metric became the quality bar for every content and feature decision afterward. Whenever we debated whether to include something, we'd check it against that sentence.
+> *"Honest pushback: Resume Matcher sounds like a recruiter tool that matches resumes to jobs in bulk. ATS software. Something Workday or Greenhouse already does.*
+>
+> *This product does something more interesting — it decodes what a company is actually hiring for, scores your fit honestly, and teaches you the skills you're missing. That's not matching. That's intelligence.*
+>
+> *A few directions: JDX — short for JD decoded. RoleReady — speaks to the outcome. DecodeHire — direct. FitMap — visualizes your fit. But you know your audience. What feels right?"*
 
-> **Takeaway:** A one-sentence success metric is more useful than a paragraph of goals. Make the AI help you find it.
+I said JDX. The AI locked it immediately and didn't let me waver.
 
----
+**The moment that mattered most in this session** wasn't the naming — it was earlier, when I tried to add a feature at the end of the spec.
 
-#### "What are we explicitly NOT building?"
+We had finalized scope. Locked decisions everywhere. Then I said: *"Actually, what if the app could find a real JD based on just a job title? So you don't have to paste anything."*
 
-I didn't ask this. The AI introduced it. After we agreed on scope, it said:
+> *"That's a significant feature addition and worth thinking through carefully before we lock it. You're describing a JD Discovery Agent — the user types a title, the agent searches for real current JDs, presents options, and the user picks one. That changes the input contract, the agent architecture, and the first-run experience. Do you want to add this to V1, or document it as V2 and keep the scope we've built?"*
 
-> *"Let me play back what I think you're explicitly NOT building in version one, so we have it written down. I'm hearing: [list]. Are these correct? Because if any of them are wrong, it'll affect several decisions we just made."*
+I tried to add it to V1.
 
-Having an explicit out-of-scope list turned out to be as valuable as the feature list. It resolves future debates instantly.
+> *"If we add it, we need to spec it properly — not just mention it. That means: which search provider? What happens when results are low quality? What's the UI for presenting options? How does it interact with the resume you've already uploaded? We can go through all of that now, but be aware it's at least another hour of design work and significantly more build complexity. Is this a V1 feature or are you describing V2?"*
 
-> **Takeaway:** Make the AI write your "not building" list. It's as important as your roadmap.
+I documented it as V2. The discipline of that question — *is this V1 or V2?* — is the single most useful thing I've taken out of these sessions.
 
----
+**The out-of-scope list we produced before writing a single file:**
+- PDF/doc export
+- Team workspaces
+- Paid tiers and BYOK in V1
+- Resume version history
+- Shareable link expiry or password protection
+- Mobile-native app
+- JD Discovery Agent
 
-### Where I Pushed Back on the AI — and Why It Mattered
-
-#### When it made up numbers
-
-The AI proposed a pricing model with specific dollar amounts. I asked:
-
-> *"Did you come up with those numbers to make a profit, or to cover costs? What's the basis?"*
-
-The AI stopped and said:
-
-> *"Honest answer: I made those up. Let me actually do the cost math."*
-
-It then estimated real costs — API calls per generation, infrastructure, third-party services — and derived a minimum viable price based on actual numbers, not gut feel. The final pricing was different from the original suggestion and grounded in reality.
-
-> **Takeaway:** Challenge the AI when it produces numbers. Ask "what's the basis?" It will either justify the number or admit it guessed. Guessing is not a spec.
+That list resolved more debates during the build than any feature we actually shipped.
 
 ---
 
-#### When it gave me two options instead of a recommendation
+## Session 3: AgentRoom — When the Hard Constraint Changes Everything
 
-At one point the AI presented two approaches and asked me to choose. I said:
+**What I was building:** A virtual meeting platform where human team members and AI agent personas participate together in live voice sessions. After the meeting, agents execute their action items — including a Developer agent that writes and commits real code.
 
-> *"Which one do you suggest based on the long-term vision of this product?"*
+**The spec session that forced clarity:** The latency question.
 
-This is important. AI assistants are trained to present options neutrally. But a good spec requires *decisions*, not menus. When you push the AI to make a recommendation, it has to reason about trade-offs and commit to a position. That reasoning is often more valuable than the recommendation itself.
+I described the product, the agent personas (PM, Architect, Developer, Business Analyst), the voice interaction model. The AI asked:
 
-> **Takeaway:** Don't let the AI hide behind "here are your options." Push it to make a recommendation, then push back on the recommendation.
+> *"One hard constraint question before we go further: what is the acceptable perceived latency between a human speaking and an agent responding? Because that single number determines your entire backend architecture. If it's under one second, you're in streaming territory with aggressive pre-buffering. If it's two to three seconds, you have more options. What's the bar?"*
 
----
+I hadn't put a number on it. I said it should feel natural.
 
-#### When I asked it to verify its own work
+> *"'Natural' isn't a spec. Human conversation turn-taking is 200 to 500 milliseconds. You're not hitting that with LLM inference plus TTS. A realistic target for this product is under 1.5 seconds perceived latency — that's the point where people stop noticing the pause. Is 1.5 seconds your ceiling?"*
 
-After a while, I said:
+Yes. That became the hard NFR that shaped every downstream decision: why we pre-buffer the first 500ms of ElevenLabs audio, why Deepgram STT is streaming not batch, why the LangGraph conversation state lives in Redis not Supabase for the duration of a meeting.
 
-> *"Do another pass on the spec. Tell me line by line what you've captured and verify it against our full conversation."*
+**The scope question that almost derailed the session:**
 
-It found five things it had missed. One was significant: a whole business model section that still said "TBD" when we had actually made the decision in conversation 30 minutes earlier. Decisions made in chat don't automatically make it into the document.
+I described the Developer agent and said it should write code. The AI asked:
 
-> **Takeaway:** Periodically ask the AI to audit its own work against the conversation. Then audit the audit.
+> *"Write code and do what with it? There are three very different products hiding in that sentence: (1) write code and show it in the meeting as a deliverable, (2) write code and commit it to a feature branch post-meeting, (3) write code and submit a PR for human review. These are not the same scope. Which one are you building?"*
 
----
+I said option 2 — commit to a feature branch, never main.
 
-### The Moment I Knew the Spec Was Ready
+> *"Good. Lock that. And I want to capture the implication: the Developer agent needs GitHub OAuth in the stack, the meeting record needs to know which repo it's operating on, and the RAG layer needs to include codebase context so the agent isn't writing code blind. None of that was in what you described. Do you want to add those requirements now?"*
 
-I asked:
+We added them. The RAG layer for AgentRoom ended up being more complex than I anticipated — not just meeting docs but also the actual codebase the Developer agent would be writing against. That would have been a mid-build discovery without the spec session.
 
-> *"Can this spec be used by any coding tool to start development right now?"*
+**The risk table that paid for itself:**
 
-The AI's answer was honest:
+At the end of the Architecture phase, the AI produced a risk table. One entry:
 
-> *"Partially, but not fully. The product spec tells a tool what to build, but without the data model, API contract, and screen spec, the tool would have to guess at schema, endpoints, and layouts. Those guesses will be inconsistent."*
+> *"RAG context quality too low for useful agent responses — Likelihood: High — Impact: High — Mitigation: Onboarding flow enforces minimum document upload before first meeting. RAG status check before meeting start."*
 
-That answer told me exactly what was missing. We spent another hour writing the technical specs. At the end, the AI confirmed: *"Now any AI coding tool can pick this up and build without inventing design decisions."*
-
-That's the bar. Not "we have a document." But "a tool can build from this without guessing."
+Likelihood High, Impact High, and I hadn't thought about it at all. The mitigation became a first-class feature: you can't start a meeting until your project documents are uploaded and indexed. That's now a core part of the onboarding flow, not an afterthought.
 
 ---
 
-## The Starter Prompt
+## What I Learned Across All Three Sessions
 
-Copy and paste this to begin your own SDD session with any AI assistant:
+**The out-of-scope list is as valuable as the feature list.** Every session, the most useful artifact wasn't what we were building — it was the explicit record of what we decided not to build. That list ends debates instantly during development.
 
-```
-I have a product idea I want to build, but I do NOT want you to write any 
-code yet. Instead, I want to use Spec-Driven Development (SDD).
+**"Is this V1 or V2?" is the most useful question in a spec session.** I tried to add features at the end of every session. Every time, the AI made me decide: is this real V1 scope, or am I describing V2? The honest answer was almost always V2.
 
-Your job is to act as a Socratic product partner. That means:
+**The AI will make up numbers if you let it.** In the AgentRoom session, I asked about concurrent meeting limits for pricing. The AI gave me a number. I asked: *"Did you calculate that or estimate it?"* It said: *"Honest answer — I estimated it. Let me do the actual math."* The real number was different. Push back on every number that appears without a derivation.
 
-1. Ask me hard questions before accepting any decision
-2. Push back when my answers are vague, contradictory, or skipping 
-   important trade-offs
-3. Challenge my assumptions — especially about users, pricing, and scope
-4. When I give you a direction, ask "are you sure?" if something doesn't 
-   add up
-5. Make recommendations when I ask, but justify them — never just give me 
-   options and ask me to pick
+**Architecture decisions made in a spec session are cheaper than architecture decisions made mid-build by a factor of ten.** The HireVault local-first constraint, the JDX shareable link design, the AgentRoom Redis-for-session-state decision — every one of those resolved in the spec phase would have been a partial rewrite if discovered during coding.
 
-The output we are working toward is a complete SDD made of 5 documents:
-- SPEC.md — product decisions, users, features, business model, tech stack, NFRs
-- DATAMODEL.md — every database table, column, constraint, and index
-- API.md — every API endpoint with request/response shapes
-- SCREENS.md — every UI screen with layout and behavior
-- AGENTS.md — AI agent design (only if the product uses AI agents)
-
-Rules for our session:
-- Lock decisions with ✅ before moving to the next topic
-- Mark open debates with 🔄 and unknowns with ❓
-- No section is "done" until it has no ❓ or 🔄 items
-- Periodically audit what's been captured vs. what we've discussed
-- The spec is done when a developer who wasn't in this conversation 
-  could build exactly what I have in my head without asking me anything
-
-Start by asking me to describe my product idea in one paragraph. 
-Then begin the Socratic process.
-```
+**The bar is right: a developer who wasn't in the room should be able to build from the spec without asking anything.** I tested this on AgentRoom. I gave the five documents to a collaborator who hadn't been in the session. They had one question — about which ElevenLabs voice model to use. That question was already answered in AGENTS.md. They missed it. The spec was complete.
 
 ---
 
-## Session Tips
+## The One Prompt That Changes the Session
 
-These two follow-up prompts matter most during the session:
+When the AI gets too agreeable — when it's summarizing what you said instead of challenging it — use this:
 
-**When the AI gets too agreeable:**
-```
-What's wrong with what I just said? Push back.
-```
+> *"What's wrong with what I just said? Push back hard."*
 
-**When you think a section is done:**
-```
-Do a complete pass and tell me everything you've captured so far.
-Verify it line by line against our full conversation and flag anything missing.
-```
-
-**When the AI makes up numbers:**
-```
-What's the basis for that? Did you calculate it or estimate it?
-Show your work.
-```
-
-**When you want an opinion, not options:**
-```
-Don't give me options. Tell me what you would recommend and why.
-```
+That single prompt, used three or four times in a session, will surface the assumptions you didn't know you were making.
 
 ---
 
-## Output Structure
-
-When the session is complete, you should have these files in your repo:
-
-```
-your-project/
-├── SPEC.md          # Product spec — the PRD
-├── DATAMODEL.md     # Database schema
-├── API.md           # API contract
-├── SCREENS.md       # UI screen spec
-└── AGENTS.md        # AI agent design (if applicable)
-```
-
-### How to use the SDD to start building
-
-Reference the documents explicitly in your coding prompts:
-
-```
-Using SPEC.md, DATAMODEL.md, and API.md as your reference, scaffold the 
-FastAPI backend with SQLAlchemy models and the auth routes.
-
-Before writing any code, show me the full folder tree you plan to create 
-and wait for my approval.
-```
-
-```
-Using AGENTS.md, implement the [Agent Name] as a LangGraph node.
-Match the input/output schema exactly as specified.
-```
-
-```
-Using SCREENS.md and DATAMODEL.md, build the [Screen Name] in Next.js 
-with shadcn/ui. Match the layout and element spec exactly.
-```
-
-> **Rule:** One domain per prompt. Agents lose coherence on large tasks.
-> Build backend before frontend. Frontend depends on API shapes.
-
----
-
-## Key Principles
-
-| Principle | Why It Matters |
-|---|---|
-| Start with constraints, not features | What you won't build is as clarifying as what you will |
-| Push back on every vague answer | Great specs are built through disagreement, not agreement |
-| Make numbers traceable | Every price, target, and threshold needs a reason |
-| Lock decisions explicitly | Unconfirmed discussions don't count as decisions |
-| Keep the open questions list | Honest unknowns beat fake decisions |
-| The spec is done when a stranger can build from it | Not when it feels complete |
-
----
-
-## Contributing
-
-If you've used this approach and want to share your experience or improve the prompts, PRs are welcome.
-
----
-
-*Built from a real SDD session. No product details included — just the methodology.*
+*Built from three real spec sessions. Product names and some implementation details are real — these are products currently in development or production.*

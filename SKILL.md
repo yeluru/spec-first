@@ -1,5 +1,5 @@
 ---
-name: spec-first
+name: sdd-with-ai
 description: >
   Spec-Driven Development with AI — run a complete Socratic product design session
   that produces a full Software Design Document (SDD) before writing a single line
@@ -89,8 +89,7 @@ Generate one file at a time in this order:
 4. SCREENS.md
 5. AGENTS.md (only if product uses AI agents)
 
-For each file, use the template structure in `templates/` as your guide
-(e.g. `templates/SPEC_template.md`, `templates/DATAMODEL_template.md`, etc.).
+For each file, follow the template structure in the `templates/` folder.
 
 After all files are generated, ask:
 "Could a developer who was not in this conversation pick up this spec and build
@@ -145,7 +144,10 @@ Pro $9.99/month (unlimited), Pro-BYOK $6.99/month (unlimited, user's own API key
 
 ## File Generation Standards
 
-Use the templates in `templates/` before generating any file. Key standards:
+Read the relevant template from `templates/` before generating each file. The
+templates define the required sections and depth for each output document.
+
+Key standards that apply to all files:
 
 - Every table in DATAMODEL.md needs columns, types, constraints, indexes, and RLS policy
 - Every endpoint in API.md needs method, path, auth, request body, response body, and error codes
@@ -168,7 +170,7 @@ The SDD is ready when:
 
 ## Reference Files
 
-- `templates/` — required structure for all five SDD output files
+- `templates/` — required structure for all five SDD output files (SPEC, DATAMODEL, API, SCREENS, AGENTS)
 - `prompts/02_session_tips.md` — prompts the user can use to keep the session honest
 
-Read the relevant template file before generating each output document.
+Read the relevant file from `templates/` before generating each output document.
